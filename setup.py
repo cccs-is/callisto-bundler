@@ -7,6 +7,7 @@ with open("README.md", "r") as fh:
 install_requires = [
     'requests>=2.9.1',
     'markdown>=2.6.0',
+    'open-humans-api>=0.2.2'
 ]
 
 setuptools.setup(

@@ -1,6 +1,8 @@
 import os
 import nbformat
 import markdown
+from ohapi import api
+from .helper import upload_notebook
 
 
 def _jupyter_bundlerextension_paths():
@@ -27,11 +29,26 @@ def bundle(handler, model):
     model : dict
         Notebook model from the configured ContentManager
     """
-    notebook_filename = model['name']
+    try:
+        access_token = os.getenv('OH_ACCESS_TOKEN')
+        ohmember = api.exchange_oauth2_member(access_token)
+        project_member_id = ohmember['project_member_id']
+        notebook_filename = model['name']
+        api.delete_file(access_token,
+                        project_member_id,
+                        file_basename=notebook_filename)
+        print('deleted old_file')
+    except:
+        print('whopsy, your token ({}) was expired'.format(access_token))
+        markdown_text = markdown.markdown(open('README.md').read())
+        handler.finish(str(markdown_text))
+
     notebook_content = nbformat.writes(model['content']).encode('utf-8')
-    print(len(notebook_content))
-    notebook_name = os.path.splitext(notebook_filename)[0]
-    print(notebook_name)
-    markdown_text = markdown.markdown(open('README.md').read())
-    print(os.getenv('PWD'))
+
+    upload_notebook(notebook_content, notebook_filename,
+                    access_token, project_member_id)
+    markdown_text = markdown.markdown(open(
+                        'templates/finalized_upload.md').read())
+    markdown_text = markdown_text.replace(
+            '{{title}}', notebook_filename)
     handler.finish(str(markdown_text))
