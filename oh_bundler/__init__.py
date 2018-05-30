@@ -38,17 +38,17 @@ def bundle(handler, model):
                         project_member_id,
                         file_basename=notebook_filename)
         print('deleted old_file')
-    except:
-        print('whopsy, your token ({}) was expired'.format(access_token))
-        markdown_text = markdown.markdown(open('README.md').read())
+        notebook_content = nbformat.writes(model['content']).encode('utf-8')
+
+        upload_notebook(notebook_content, notebook_filename,
+                        access_token, project_member_id)
+        markdown_text = markdown.markdown(open(
+                            'templates/finalized_upload.md').read())
+        markdown_text = markdown_text.replace(
+                '{{title}}', notebook_filename)
         handler.finish(str(markdown_text))
-
-    notebook_content = nbformat.writes(model['content']).encode('utf-8')
-
-    upload_notebook(notebook_content, notebook_filename,
-                    access_token, project_member_id)
-    markdown_text = markdown.markdown(open(
-                        'templates/finalized_upload.md').read())
-    markdown_text = markdown_text.replace(
-            '{{title}}', notebook_filename)
-    handler.finish(str(markdown_text))
+    except:
+        print('whopsy, something went wrong')
+        markdown_text = markdown.markdown(open(
+                            'templates/upload_broken.md').read())
+        handler.finish(str(markdown_text))
