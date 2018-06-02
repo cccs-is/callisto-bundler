@@ -13,7 +13,23 @@ pip install -e .
 jupyter bundlerextension enable --py oh_bundler
 ```
 
+To also rename the `deploy` button in the `jupyter` frontend to something more
+useful you can also activate the following `nbextension` that's included in this
+repository:
+
+```
+jupyter nbextension install --py oh_bundler --sys-prefix
+jupyter nbextension enable --py oh_bundler --sys-prefix
+```
+
 Now you can run `jupyter notebook` as usual and you're good to go.
+
+## Deployment
+Post-sharing the user will be redirect to another URL, per default this is
+`http://127.0.0.1:5000/shared` to facilitate easy local development.
+
+To set up another redirect_url you can set the environment variable
+`JH_BUNDLE_REDIRECT`.
 
 ## Demo
 A basic file upload to an Open Humans project is already implemented.

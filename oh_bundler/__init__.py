@@ -1,8 +1,16 @@
 import os
 import nbformat
-import markdown
 from ohapi import api
 from .helper import upload_notebook
+
+
+def _jupyter_nbextension_paths():
+    """Required to load JS button"""
+    return [dict(
+        section="notebook",
+        src="static",
+        dest="oh_bundler",
+        require="oh_bundler/index")]
 
 
 def _jupyter_bundlerextension_paths():
@@ -29,6 +37,8 @@ def bundle(handler, model):
     model : dict
         Notebook model from the configured ContentManager
     """
+    redirect_url = os.getenv("JH_BUNDLE_REDIRECT",
+                             "http://127.0.0.1:5000/shared")
     try:
         access_token = os.getenv('OH_ACCESS_TOKEN')
         ohmember = api.exchange_oauth2_member(access_token)
@@ -42,13 +52,9 @@ def bundle(handler, model):
 
         upload_notebook(notebook_content, notebook_filename,
                         access_token, project_member_id)
-        markdown_text = markdown.markdown(open(
-                            'templates/finalized_upload.md').read())
-        markdown_text = markdown_text.replace(
-                '{{title}}', notebook_filename)
-        handler.finish(str(markdown_text))
+        handler.redirect(redirect_url)
     except:
         print('whopsy, something went wrong')
-        markdown_text = markdown.markdown(open(
-                            'templates/upload_broken.md').read())
-        handler.finish(str(markdown_text))
+        handler.finish(("Your upload failed. "
+                        "Please restart your notebook server "
+                        "and try again."))
