@@ -1,9 +1,11 @@
 # jupyter-bundler-openhumans
 
-Work in Progress. The goal is to use the access tokens that are already in
-the Personal Data Notebooks to push a notebook to open humans.
+The goal is to use the `access_tokens` that are already in
+the *Personal Data Notebooks* to push a notebook to an Open Humans account.
 
-## Development
+Post-sharing users are forwarded to a site to share their notebooks.
+
+## Install / Development
 To install on your own Jupyter Notebook setup to test:
 
 ```
