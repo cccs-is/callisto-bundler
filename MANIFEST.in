@@ -10,4 +10,4 @@ global-exclude *.sh
 # explicit includes
 include README.md
 include LICENSE
-include oh_bundler/static/*
+include callisto_bundler/static/*
