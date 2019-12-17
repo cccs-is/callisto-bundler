@@ -14,7 +14,6 @@ setuptools.setup(
     description="Send notebook to Callisto gallery",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    include_package_data=True,
     url="https://github.com/cccs-is/callisto-bundler",
     packages=setuptools.find_packages(),
     classifiers=(
@@ -22,4 +21,16 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ),
+    include_package_data=True,
+    data_files=[
+        # like `jupyter nbextension install --sys-prefix`
+        ("share/jupyter/nbextensions/callisto_bundler", [
+            "callisto_bundler/static/index.js",
+        ]),
+        # like `jupyter nbextension enable --sys-prefix`
+        ("etc/jupyter/nbconfig/notebook.d", [
+            "jupyter-config/nbconfig/notebook.d/callisto_bundler.json"
+        ])
+    ]
+
 )

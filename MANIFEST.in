@@ -11,3 +11,6 @@ global-exclude *.sh
 include README.md
 include LICENSE
 include callisto_bundler/static/*
+
+recursive-include jupyter-config *.json
+recursive-include callisto_bundler/static *.js
